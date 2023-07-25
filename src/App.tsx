@@ -8,11 +8,13 @@ type AppProps = {
 
 const App = ({ modules }: AppProps): React.ReactElement => {
 	return (
-		<ModuleProvider {...modules}>
-			<div className="App">
-				<AppRouter />
-			</div>
-		</ModuleProvider>
+		<React.StrictMode>
+			<ModuleProvider {...modules}>
+				<div className="App">
+					<AppRouter />
+				</div>
+			</ModuleProvider>
+		</React.StrictMode>
 	);
 };
 
