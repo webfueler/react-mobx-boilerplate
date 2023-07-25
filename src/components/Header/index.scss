@@ -1,0 +1,25 @@
+.header {
+  background-color: #282c34;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  padding: 40px;
+
+  a {
+    color: #fff;
+  }
+
+  &__nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    flex-grow: 1;
+
+    &-item {
+      display: inline-block;
+      margin-right: 20px;
+    }
+  }
+}

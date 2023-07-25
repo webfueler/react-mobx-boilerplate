@@ -1,0 +1,13 @@
+.product-list {
+  list-style-type: none;
+  display: flex;
+  flex-wrap: wrap;
+
+  &__item {
+    flex-basis: 33%;
+
+    &-image {
+      max-width: 100px;
+    }
+  }
+}
