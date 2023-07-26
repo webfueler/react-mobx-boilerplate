@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { UserRoutes } from "../lib/utilities/UserRoutes";
-import type { IUser } from "../lib/services/UserService";
+import { UserRoutes } from "../../lib/utilities/UserRoutes";
+import type { IUser } from "../../lib/services/UserService";
 
 type Props = {
 	currentPage: number;
@@ -16,10 +16,11 @@ const UserList = ({
 }: Props): React.ReactElement | null => {
 	return (
 		users && (
-			<ul className={loading ? "is-loading" : ""}>
+			<ul className={`${loading ? "is-loading" : ""} user-list`}>
 				{users.map((user) => (
-					<li key={user.email}>
+					<li key={user.email} className="user-list__item">
 						<Link
+							className="user-list__link"
 							to={`/user/${UserRoutes.createUserSlug({
 								page: currentPage,
 								resultsPerPage: 10,

@@ -12,7 +12,7 @@ const Pagination = ({ currentPage }: Props): React.ReactElement => {
 				<Link to={`/users/${currentPage - 1}`}>Previous Page</Link>
 			)}
 			{currentPage}
-			<Link to={`/users/${currentPage + 1}`}>Next Page</Link>;
+			<Link to={`/users/${currentPage + 1}`}>Next Page</Link>
 		</div>
 	);
 };

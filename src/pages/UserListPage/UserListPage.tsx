@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { IUserStore } from "../lib/stores/UserStore";
-import { withModule } from "../container/hoc/WithModule";
-import { UserList } from "../components/UserList";
-import { Pagination } from "../components/Pagination";
+import { IUserStore } from "../../lib/stores/UserStore";
+import { withModule } from "../../container/hoc/WithModule";
+import { UserList } from "../../components/UserList";
+import { Pagination } from "../../components/Pagination";
 
 type Props = {
 	userStore: IUserStore;

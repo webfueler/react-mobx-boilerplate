@@ -1,23 +1,16 @@
-import "./index.scss";
-
 import React from "react";
 import type { Product } from "../../lib/services/ProductService";
-import type { ICartStore } from "../../lib/stores/CartStore";
-import { withModule } from "../../container/hoc/WithModule";
+import { AddToCartButton } from "./AddToCartButton";
 
 type Props = {
 	products: Product[];
-	cartStore: ICartStore;
 } & React.HTMLAttributes<HTMLUListElement>;
 
-const ProductListComponent = ({
+const ProductList = ({
 	products,
-	cartStore,
 	className,
 	...nativeProps
 }: Props): React.ReactElement => {
-	const { productIds } = cartStore;
-
 	return (
 		<ul className={`product-list ${className}`} {...nativeProps}>
 			{products?.map((product) => (
@@ -34,21 +27,11 @@ const ProductListComponent = ({
 					<p className="product-list__item-price">
 						${product.price.toFixed(2)}
 					</p>
-					<button
-						type="button"
-						onClick={(): void => {
-							cartStore.add(product.id);
-						}}
-						disabled={productIds.includes(product.id)}
-					>
-						Add to cart
-					</button>
+					<AddToCartButton product={product} />
 				</li>
 			))}
 		</ul>
 	);
 };
-
-const ProductList = withModule(["cartStore"])(ProductListComponent);
 
 export { ProductList };

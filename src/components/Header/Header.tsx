@@ -1,31 +1,35 @@
-import "./index.scss";
-
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { useModule } from "../../container";
-import { observer } from "mobx-react";
+import { CartTotal } from "./CartTotal";
 
-const Header = observer((): React.ReactElement => {
-	const { cartStore } = useModule();
+const headerMenu = [
+	{
+		name: "Home",
+		to: "/",
+	},
+	{
+		name: "Cart",
+		to: "/cart",
+	},
+	{
+		name: "Users",
+		to: "/users",
+	},
+];
 
-	return (
-		<header className="header">
-			<ul className="header__nav">
-				<li className="header__nav-item">
-					<NavLink to="/">Home</NavLink>
+const Header = (): React.ReactElement => (
+	<header className="header">
+		<ul className="header__nav">
+			{headerMenu.map((menu) => (
+				<li className="header__nav-item" key={menu.to}>
+					<NavLink to={menu.to} className="header__nav-link">
+						{menu.name}
+					</NavLink>
 				</li>
-				<li className="header__nav-item">
-					<NavLink to="/cart">Cart</NavLink>
-				</li>
-				<li className="header__nav-item">
-					<NavLink to="/users">Users</NavLink>
-				</li>
-			</ul>
-			<div className="header__total">
-				Cart total: ${cartStore.total.toFixed(2)}
-			</div>
-		</header>
-	);
-});
+			))}
+		</ul>
+		<CartTotal />
+	</header>
+);
 
 export { Header };
