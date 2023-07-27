@@ -1,6 +1,8 @@
+import { injectable } from "inversify";
 import { IUserResponse, IUserService } from "./interfaces";
 import type { IFetchUsersResponse } from "./interfaces";
 
+@injectable()
 class UserService implements IUserService {
 	fetchUsers = ({
 		page = 1,

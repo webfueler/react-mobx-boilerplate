@@ -1,11 +1,14 @@
 import React, { useEffect } from "react";
 import type { IProductStore } from "../lib/stores/ProductStore";
-import { withModule } from "../container/hoc/WithModule";
 import { ProductList } from "../components/ProductList";
+import { withModule } from "../container/WithModule";
+import { identifiers } from "../container/constants";
 
-type Props = {
+type Modules = {
 	productStore: IProductStore;
 };
+
+type Props = Modules;
 
 const HomepageComponent = ({ productStore }: Props): React.ReactElement => {
 	const { error, loading, products } = productStore;
@@ -34,6 +37,8 @@ const HomepageComponent = ({ productStore }: Props): React.ReactElement => {
 	);
 };
 
-const Homepage = withModule(["productStore"])(HomepageComponent);
+const Homepage = withModule<Modules>({
+	productStore: identifiers.IProductStore,
+})(HomepageComponent);
 
 export { Homepage };

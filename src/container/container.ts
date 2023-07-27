@@ -1,24 +1,15 @@
-import { getServiceModules, type ServiceModules } from "../lib/services";
-import { getStoreModules, type StoreModules } from "../lib/stores";
-import { getConfigModules, type ConfigModules } from "../lib/config";
-import type { IStartupOptions } from "../lib/config/StartupOptions";
+import type { IStartupOptions } from "../config";
+import { servicesContainerModule } from "../lib/services";
+import { storesContainerModule } from "../lib/stores";
+import { Container, interfaces } from "inversify";
+import { identifiers } from "./constants";
 
-type ContainerModules = ServiceModules & StoreModules & ConfigModules;
-
-const getContainerModules = (options: IStartupOptions): ContainerModules => {
-	const services = getServiceModules();
-	const stores = getStoreModules({
-		userService: services.userService,
-		productService: services.productService,
-	});
-	const configs = getConfigModules(options);
-
-	return {
-		...stores,
-		...services,
-		...configs,
-	};
+const getContainer = (options: IStartupOptions): interfaces.Container => {
+	const container = new Container({ defaultScope: "Singleton" });
+	container.load(storesContainerModule, servicesContainerModule);
+	container
+		.bind<IStartupOptions>(identifiers.IStartupOptions)
+		.toConstantValue(options);
+	return container;
 };
-
-export { getContainerModules };
-export type { ContainerModules };
+export { getContainer };

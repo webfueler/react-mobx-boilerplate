@@ -4,6 +4,8 @@ import type {
 	IUserIdentifier,
 	IUserService,
 } from "../services/UserService/interfaces";
+import { inject, injectable } from "inversify";
+import { identifiers } from "../../container/constants";
 
 interface IUserStore {
 	user: IUser | null;
@@ -14,13 +16,17 @@ interface IUserStore {
 	loadUser: (params: IUserIdentifier) => Promise<IUser | null>;
 }
 
+@injectable()
 class UserStore implements IUserStore {
 	@observable user: IUser | null = null;
 	@observable users: IUser[] = [];
 	@observable page = 1;
 	@observable loading = false;
 
-	constructor(private readonly userService: IUserService) {
+	constructor(
+		@inject(identifiers.IUserService)
+		private readonly userService: IUserService,
+	) {
 		makeObservable(this);
 	}
 

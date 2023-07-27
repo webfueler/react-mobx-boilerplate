@@ -1,24 +1,18 @@
 import "./index.scss";
+import "reflect-metadata";
 
 import * as React from "react";
 import { createRoot } from "react-dom/client";
-import { getContainerModules } from "./container";
 import { App } from "./App";
-import type { IStartupOptions } from "./lib/config/StartupOptions";
+import { getContainer } from "./container";
+// application options
+import { startupOptions } from "./config";
 
-// microfrontend / app required startup options
-const options: IStartupOptions = {
-	basename: "/",
-	rootElement: "#root",
-};
-// modules to be available in our app
-const modules = getContainerModules(options);
-
-const container = document.querySelector(options.rootElement);
-if (!container) {
+const rootElement = document.querySelector(startupOptions.rootElement);
+if (!rootElement) {
 	throw new Error(
-		`Unable to mount React application. '${options.rootElement}' not found`,
+		`Unable to mount React application. '${startupOptions.rootElement}' not found`,
 	);
 }
-const root = createRoot(container);
-root.render(<App modules={modules} />);
+const root = createRoot(rootElement);
+root.render(<App container={getContainer(startupOptions)} />);

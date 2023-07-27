@@ -1,5 +1,13 @@
-import { action, computed, makeObservable, observable } from "mobx";
-import { IProductService, Product } from "../services/ProductService";
+import {
+	action,
+	computed,
+	makeObservable,
+	observable,
+	runInAction,
+} from "mobx";
+import { type IProductService, Product } from "../services/ProductService";
+import { inject, injectable } from "inversify";
+import { identifiers } from "../../container/constants";
 
 interface ICartStore {
 	add(id: number): Promise<Product[]>;
@@ -9,10 +17,14 @@ interface ICartStore {
 	total: number;
 }
 
+@injectable()
 class CartStore implements ICartStore {
 	@observable products: Product[] = [];
 
-	constructor(private productService: IProductService) {
+	constructor(
+		@inject(identifiers.IProductService)
+		private readonly productService: IProductService,
+	) {
 		makeObservable(this);
 	}
 
@@ -33,7 +45,9 @@ class CartStore implements ICartStore {
 	@action
 	public async add(id: number): Promise<Product[]> {
 		const product = await this.productService.fetchOne(id);
-		this.products.push(product);
+		runInAction(() => {
+			this.products.push(product);
+		});
 		return this.products;
 	}
 

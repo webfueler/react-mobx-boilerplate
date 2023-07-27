@@ -1,3 +1,4 @@
+import { injectable } from "inversify";
 import { ErrorHandling } from "../../utilities/ErrorHandling";
 import type { Product } from "./interfaces";
 
@@ -9,6 +10,7 @@ interface IProductService {
 	fetchOne: (id: number) => Promise<Product>;
 }
 
+@injectable()
 class ProductService implements IProductService {
 	fetchAll({ limit = 20, sort = "desc" } = {}): Promise<Product[]> {
 		console.time("API response time");

@@ -1,6 +1,8 @@
 import { action, makeObservable, observable } from "mobx";
 import type { IProductService, Product } from "../services/ProductService";
 import { ErrorHandling } from "../utilities/ErrorHandling";
+import { inject, injectable } from "inversify";
+import { identifiers } from "../../container/constants";
 
 interface IProductStore {
 	products: Product[] | null;
@@ -10,13 +12,17 @@ interface IProductStore {
 	loadProduct: (options: { id: number }) => Promise<Product | undefined>;
 }
 
+@injectable()
 class ProductStore implements IProductStore {
 	@observable products: Product[] = [];
 	@observable product: Product | undefined;
 	@observable loading = false;
 	@observable error?: Error;
 
-	constructor(private readonly productService: IProductService) {
+	constructor(
+		@inject(identifiers.IProductService)
+		private readonly productService: IProductService,
+	) {
 		makeObservable(this);
 	}
 

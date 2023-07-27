@@ -1,6 +1,8 @@
+import { injectable } from "inversify";
 import { IUserIdentifier, IUserResponse, IUserService } from "./interfaces";
 import type { IFetchUsersResponse } from "./interfaces";
 
+@injectable()
 class UserServiceWithCache implements IUserService {
 	// don't do cache like this, it will break your app
 	private cache: Map<string, string> = new Map();
@@ -18,7 +20,7 @@ class UserServiceWithCache implements IUserService {
 			return Promise.resolve(
 				email === ""
 					? users
-					: users.results.filter((user) => user.email === email)
+					: users.results.filter((user) => user.email === email),
 			);
 		}
 

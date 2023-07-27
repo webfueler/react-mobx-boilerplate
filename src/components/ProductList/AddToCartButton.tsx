@@ -1,12 +1,16 @@
 import React from "react";
 import type { ICartStore } from "../../lib/stores/CartStore";
 import type { Product } from "../../lib/services/ProductService";
-import { withModule } from "../../container/hoc/WithModule";
+import { withModule } from "../../container/WithModule";
+import { identifiers } from "../../container/constants";
+
+type Modules = {
+	cartStore: ICartStore;
+};
 
 type Props = {
-	cartStore: ICartStore;
 	product: Product;
-};
+} & Modules;
 
 const AddToCartButtonComponent = ({
 	cartStore,
@@ -23,5 +27,7 @@ const AddToCartButtonComponent = ({
 	</button>
 );
 
-const AddToCartButton = withModule(["cartStore"])(AddToCartButtonComponent);
+const AddToCartButton = withModule<Modules>({
+	cartStore: identifiers.ICartStore,
+})(AddToCartButtonComponent);
 export { AddToCartButton };

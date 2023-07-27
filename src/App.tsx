@@ -1,19 +1,20 @@
 import * as React from "react";
-import { ModuleProvider, type ContainerModules } from "./container";
 import { AppRouter } from "./routes/Router";
+import { interfaces } from "inversify";
+import { ContainerProvider } from "./container/ContainerProvider";
 
 type AppProps = {
-	modules: ContainerModules;
+	container: interfaces.Container;
 };
 
-const App = ({ modules }: AppProps): React.ReactElement => {
+const App = ({ container }: AppProps): React.ReactElement => {
 	return (
 		<React.StrictMode>
-			<ModuleProvider {...modules}>
+			<ContainerProvider container={container}>
 				<div className="App">
 					<AppRouter />
 				</div>
-			</ModuleProvider>
+			</ContainerProvider>
 		</React.StrictMode>
 	);
 };

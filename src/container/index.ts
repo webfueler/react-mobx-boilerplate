@@ -1,2 +1,4 @@
 export * from "./container";
-export * from "./ModuleProvider";
+export * from "./ContainerProvider";
+export * from "./UseInjection";
+export * from "./WithModule";

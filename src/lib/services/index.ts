@@ -1,20 +1,13 @@
 import { type IUserService, UserService } from "./UserService";
 import { ProductService, type IProductService } from "./ProductService";
 import { type ILoggerService, LoggerService } from "./LoggerService";
+import { ContainerModule } from "inversify";
+import { servicesIdentifiers } from "./constants";
 
-type ServiceModules = {
-	userService: IUserService;
-	productService: IProductService;
-	loggerService: ILoggerService;
-};
+const servicesContainerModule = new ContainerModule((bind) => {
+	bind<IUserService>(servicesIdentifiers.IUserService).to(UserService);
+	bind<IProductService>(servicesIdentifiers.IProductService).to(ProductService);
+	bind<ILoggerService>(servicesIdentifiers.ILoggerService).to(LoggerService);
+});
 
-const getServiceModules = (): ServiceModules => {
-	return {
-		userService: new UserService(),
-		productService: new ProductService(),
-		loggerService: new LoggerService(),
-	};
-};
-
-export { getServiceModules };
-export type { ServiceModules };
+export { servicesContainerModule };

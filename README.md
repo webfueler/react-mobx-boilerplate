@@ -6,9 +6,7 @@ This is a repository with an example of a base application that can scale, using
 
 Some considerations were done while creating this boilerplate:
 - using classes for modules (OOP) instead of functional programming (could be refactored, but this is personal preference)
-- Interface based implementation (good to swap modules between server and client side if required)
-- modules are Singletons, instantiated before react renders
-- will probably add [InversifyJS](https://inversify.io/) to get dependency injection (makes everything simpler / scalable when defining the main container)
+- Interface based implementation (easy to swap modules at any time, different modules between server and client side if required)
 - made a simple [webpack](https://webpack.js.org/) configuration
 
 ## Developing
