@@ -2,7 +2,7 @@ import "./index.scss";
 import "reflect-metadata";
 
 import * as React from "react";
-import { createRoot } from "react-dom/client";
+import { hydrateRoot } from "react-dom/client";
 import { App } from "./App";
 import { getContainer } from "./container";
 // application options
@@ -14,5 +14,6 @@ if (!rootElement) {
 		`Unable to mount React application. '${startupOptions.rootElement}' not found`,
 	);
 }
-const root = createRoot(rootElement);
-root.render(<App container={getContainer(startupOptions)} />);
+
+hydrateRoot(rootElement, <App container={getContainer(startupOptions)} />);
+// root.render(<App container={getContainer(startupOptions)} />);
