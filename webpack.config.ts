@@ -1,20 +1,22 @@
 import "webpack-dev-server"; // required for typings
 import path from "node:path";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import HtmlWebpackPlugin from "html-webpack-plugin";
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
+import WebpackAssetsManifest from "webpack-assets-manifest";
 import type { Configuration } from "webpack";
+import nodeExternals from "webpack-node-externals";
+import { DefinePlugin } from "webpack";
 
 const isProduction = process.env.NODE_ENV !== "development";
 
-const customWebpackConfig = async (): Promise<Configuration> => {
-	const config: Configuration = {
-		entry: path.resolve(__dirname, "src/index.tsx"),
+const customWebpackConfig = (): Configuration[] => {
+	const clientConfig: Configuration = {
+		entry: {
+			app: path.resolve(__dirname, "src/entry-client.tsx"),
+		},
 		output: {
-			clean: true,
-			filename: isProduction ? "[name].[fullhash].js" : "index.js",
+			filename: isProduction ? "[name].[fullhash].js" : "client.js",
 			path: path.resolve(__dirname, "dist"),
-			publicPath: "/",
 		},
 		mode: isProduction ? "production" : "development",
 		module: {
@@ -72,7 +74,10 @@ const customWebpackConfig = async (): Promise<Configuration> => {
 						}),
 				  ]
 				: []),
-			new HtmlWebpackPlugin({ template: "src/index.html" }),
+			new DefinePlugin({
+				__isBrowser__: "true",
+			}),
+			new WebpackAssetsManifest(),
 		],
 		optimization: {
 			minimize: isProduction,
@@ -90,14 +95,43 @@ const customWebpackConfig = async (): Promise<Configuration> => {
 				  }
 				: {}),
 		},
-		devServer: {
-			historyApiFallback: {
-				index: "/index.html",
-			},
-		},
 	};
 
-	return config;
+	const serverConfig: Configuration = {
+		mode: "production",
+		entry: "./src/server/index.tsx",
+		target: "node",
+		externals: [nodeExternals()],
+		output: {
+			path: path.resolve(__dirname, "dist"),
+			filename: "server.js",
+		},
+		module: {
+			rules: [
+				{
+					test: /\.(sa|sc|c)ss$/,
+					loader: "ignore-loader",
+				},
+				{
+					test: /\.(ts)x?$/,
+					use: ["babel-loader", "ts-loader"],
+					exclude: /node_modules/,
+				},
+			],
+		},
+		resolve: {
+			extensions: [".ts", ".tsx", ".js"],
+		},
+		plugins: [
+			new MiniCssExtractPlugin({
+				filename: "server.css",
+			}),
+			new DefinePlugin({
+				__isBrowser__: "false",
+			}),
+		],
+	};
+	return [clientConfig, serverConfig];
 };
 
 export default customWebpackConfig();

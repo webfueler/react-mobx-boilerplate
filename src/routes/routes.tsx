@@ -4,7 +4,7 @@ import { Default as DefaultLayout } from "../layouts/Default";
 import { UserListPage } from "../pages/UserListPage";
 import { Homepage } from "../pages/Homepage";
 import { CartPage } from "../pages/CartPage";
-import { RouteObject } from "react-router-dom";
+import type { RouteObject } from "react-router-dom";
 
 const routes: RouteObject[] = [
 	{
@@ -16,11 +16,11 @@ const routes: RouteObject[] = [
 				element: <Homepage />,
 			},
 			{
-				path: "cart",
+				path: "/cart",
 				element: <CartPage />,
 			},
 			{
-				path: "users",
+				path: "/users",
 				element: <UserListPage />,
 				children: [
 					{
@@ -30,7 +30,7 @@ const routes: RouteObject[] = [
 				],
 			},
 			{
-				path: "user",
+				path: "/user",
 				element: <UserDetailPage />,
 				children: [
 					{
