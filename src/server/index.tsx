@@ -13,17 +13,21 @@ import { ContainerProvider, getContainer } from "../container";
 import { startupOptions } from "../config";
 import { buildRoutes } from "../routes/utils";
 import { webpack } from "webpack";
-import getConfig from "../../webpack.config";
+import { serverConfig } from "../../webpack.config";
+
+const isDevelopment = process.env.NODE_ENV === "development";
 
 const port = 8080;
-
-const compiler = webpack(getConfig[1]);
-
+const compiler = webpack(serverConfig);
 const app = express();
 
 app.use(express.static(path.resolve("dist")));
 
-app.use(webpackDevMiddleWare(compiler));
+app.use(
+	webpackDevMiddleWare(compiler, {
+		index: "/",
+	}),
+);
 
 app.get("*", async (req, res, next) => {
 	const matches = matchRoutes(routes, req.url, startupOptions.basename);
@@ -40,13 +44,19 @@ app.get("*", async (req, res, next) => {
 		</ContainerProvider>,
 	);
 
+	const headTags = isDevelopment
+		? `
+		<script defer="defer" src="/client.app.js"></script>
+		<script defer="defer" src="/client.runtime.js"></script>
+	`
+		: {};
+
 	return res.send(`
 		<!doctype html>
 		<html>
 			<head>
 				<title>SSR App</title>
-				<script defer="defer" src="/bundle.js"></script>
-				<link href="/main.css" rel="stylesheet">
+				${headTags}
 			</head>
 			<body>
 				<div id="root">${markup}</div>
