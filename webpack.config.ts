@@ -5,17 +5,24 @@ import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
 import WebpackAssetsManifest from "webpack-assets-manifest";
 import type { Configuration } from "webpack";
 import nodeExternals from "webpack-node-externals";
-import { DefinePlugin } from "webpack";
+import { DefinePlugin, HotModuleReplacementPlugin } from "webpack";
 
 const isProduction = process.env.NODE_ENV !== "development";
 
 const clientConfig: Configuration = {
 	entry: {
-		app: [path.resolve(__dirname, "src/entry-client.tsx")],
+		app: [
+			path.resolve(__dirname, "src/entry-client.tsx"),
+			// isProduction ? "" : "webpack-hot-middleware/client",
+		].filter((value) => value !== ""),
 	},
 	output: {
 		filename: isProduction ? "[name].[fullhash].js" : "client.[id].js",
-		path: path.resolve(__dirname, "dist"),
+		path: path.resolve(__dirname, "dist/client"),
+		clean: true,
+	},
+	watchOptions: {
+		ignored: ["**/src/server/**/*"],
 	},
 	devtool: isProduction ? "source-map" : "eval-source-map",
 	mode: isProduction ? "production" : "development",
@@ -73,7 +80,9 @@ const clientConfig: Configuration = {
 						openAnalyzer: false,
 					}),
 			  ]
-			: []),
+			: [
+					/* new HotModuleReplacementPlugin() */
+			  ]),
 		new DefinePlugin({
 			__isBrowser__: "true",
 		}),
@@ -100,13 +109,14 @@ const clientConfig: Configuration = {
 };
 
 const serverConfig: Configuration = {
-	mode: isProduction ? "production" : "development",
+	mode: "production",
 	entry: "./src/server/index.tsx",
 	target: "node",
 	externals: [nodeExternals()],
 	output: {
-		path: path.resolve(__dirname, "dist"),
-		filename: "server.js",
+		path: path.resolve(__dirname, "dist/server"),
+		filename: "index.js",
+		clean: true,
 	},
 	module: {
 		rules: [
@@ -131,8 +141,9 @@ const serverConfig: Configuration = {
 		new DefinePlugin({
 			__isBrowser__: "false",
 		}),
+		// !isProduction && new HotModuleReplacementPlugin(),
 	].filter(Boolean),
 };
 
 export { clientConfig, serverConfig };
-export default [clientConfig, serverConfig];
+export default clientConfig;

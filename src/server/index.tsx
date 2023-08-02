@@ -1,38 +1,37 @@
-import "reflect-metadata";
+// Server
 import express from "express";
 import path from "node:path";
 import webpackDevMiddleWare from "webpack-dev-middleware";
+// import webpackHotMiddleware from "webpack-hot-middleware";
+import { webpack } from "webpack";
+import { serverConfig } from "../../webpack.config";
 
+// Application
+import "reflect-metadata";
 import React from "react";
 import ReactDomServer from "react-dom/server";
 import { StaticRouter } from "react-router-dom/server";
 import { matchRoutes } from "react-router-dom";
 import { routes } from "../routes/routes";
-
 import { ContainerProvider, getContainer } from "../container";
 import { startupOptions } from "../config";
 import { buildRoutes } from "../routes/utils";
-import { webpack } from "webpack";
-import { serverConfig } from "../../webpack.config";
 
-const isDevelopment = process.env.NODE_ENV === "development";
-
+const isDevelopment = true;
 const port = 8080;
-const compiler = webpack(serverConfig);
 const app = express();
 
-app.use(express.static(path.resolve("dist")));
-
-app.use(
-	webpackDevMiddleWare(compiler, {
-		index: "/",
-	}),
-);
+if (isDevelopment) {
+	// configure devServer
+	const compiler = webpack(serverConfig);
+	app.use(webpackDevMiddleWare(compiler));
+	// app.use(webpackHotMiddleware(compiler));
+	app.use(express.static(path.resolve(path.join(__dirname, "..", "client"))));
+}
 
 app.get("*", async (req, res, next) => {
 	const matches = matchRoutes(routes, req.url, startupOptions.basename);
 	const activeRoute = matches ? matches.pop() : null;
-	console.log(activeRoute);
 
 	const markup = ReactDomServer.renderToString(
 		<ContainerProvider container={getContainer(startupOptions)}>
