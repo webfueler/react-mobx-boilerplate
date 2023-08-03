@@ -143,6 +143,9 @@ const serverConfig: Configuration = {
 		}),
 		// !isProduction && new HotModuleReplacementPlugin(),
 	].filter(Boolean),
+	optimization: {
+		nodeEnv: false,
+	},
 };
 
 export { clientConfig, serverConfig };

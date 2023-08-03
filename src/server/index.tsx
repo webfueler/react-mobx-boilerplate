@@ -17,7 +17,8 @@ import { ContainerProvider, getContainer } from "../container";
 import { startupOptions } from "../config";
 import { buildRoutes } from "../routes/utils";
 
-const isDevelopment = true;
+const isDevelopment = process.env.NODE_ENV === "development";
+
 const port = 8080;
 const app = express();
 
