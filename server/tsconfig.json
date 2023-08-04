@@ -1,0 +1,10 @@
+{
+  "extends": ["../tsconfig.json"],
+  "compilerOptions": {
+    "target": "es6",
+    "lib": ["dom", "es6", "ES2021"],
+    "module": "NodeNext",
+    "jsx": "react",
+  },
+  "include": [".eslintrc.js", "webpack.config.ts", "src"],
+}

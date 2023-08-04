@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "es6",
     "lib": ["dom", "es6", "ES2021"],
-    "module": "NodeNext",
-    "jsx": "react",
+    "module": "ESNext",
+    "jsx": "preserve",
     "sourceMap": true,
     "strict": true,
     "moduleResolution": "node",
@@ -18,6 +18,11 @@
     "isolatedModules": true,
     "checkJs": true,
   },
-  "include": [".eslintrc.js", "index.d.ts", "**/*.ts", "**/*.tsx", "**/*.js"],
+  "include": [".eslintrc.js", "**/*.ts", "**/*.tsx", "**/*.js"],
   "exclude": ["node_modules", "dist"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  }
 }
