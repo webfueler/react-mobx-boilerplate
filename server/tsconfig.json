@@ -6,5 +6,5 @@
     "module": "NodeNext",
     "jsx": "react",
   },
-  "include": [".eslintrc.js", "webpack.config.ts", "src"],
+  "include": [".eslintrc.js", "webpack.config.ts", "src", "../index.d.ts"],
 }

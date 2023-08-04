@@ -1,10 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import type { IProductStore } from "../lib/stores/ProductStore";
 import { ProductList } from "../components/ProductList";
 import { withModule } from "../container/WithModule";
 import { identifiers } from "../container/constants";
-import { withFetcher } from "../container/WithFetcher";
-import { compose } from "../../../common/src/compose";
 
 type Modules = {
 	productStore: IProductStore;
@@ -14,14 +12,6 @@ type Props = Modules;
 
 const HomepageComponent = ({ productStore }: Props): React.ReactElement => {
 	const { error, loading, products } = productStore;
-
-	// can't use destructuring to call loadProducts
-	// probably mobx limitation / needs investigation
-	/*
-	useEffect(() => {
-		productStore.loadProducts();
-	}, [productStore]);
-	*/
 
 	return (
 		<div className="product-page">

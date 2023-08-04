@@ -1,5 +1,3 @@
-declare const __isBrowser__: boolean;
-
 import { ContainerModule } from "inversify";
 import {
 	ClientHttpService,

@@ -3,6 +3,7 @@
     "target": "es6",
     "lib": ["dom", "es6", "ES2021"],
     "module": "ESNext",
+    "outDir": "dist",
     "jsx": "preserve",
     "sourceMap": true,
     "strict": true,

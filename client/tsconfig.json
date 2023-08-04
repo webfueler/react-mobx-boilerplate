@@ -4,5 +4,5 @@
     "target": "es6",
     "lib": ["dom", "es6", "ES2015"],
   },
-  "include": [".eslintrc.js", "webpack.config.ts", "index.d.ts", "src", "../client/src"],
+  "include": [".eslintrc.js", "webpack.config.ts", "index.d.ts", "../index.d.ts", "src"],
 }
