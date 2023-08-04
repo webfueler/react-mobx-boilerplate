@@ -3,6 +3,7 @@ import type { IProductService, Product } from "../services/ProductService";
 import { ErrorHandling } from "../utilities/ErrorHandling";
 import { inject, injectable } from "inversify";
 import { identifiers } from "../../container/constants";
+import { ServerSideFetcher } from "../../routes/interfaces";
 
 interface IProductStore {
 	products: Product[] | null;
@@ -13,7 +14,7 @@ interface IProductStore {
 }
 
 @injectable()
-class ProductStore implements IProductStore {
+class ProductStore implements IProductStore, ServerSideFetcher {
 	@observable products: Product[] = [];
 	@observable product: Product | undefined;
 	@observable loading = false;
@@ -24,6 +25,12 @@ class ProductStore implements IProductStore {
 		private readonly productService: IProductService,
 	) {
 		makeObservable(this);
+	}
+
+	@action
+	public async serverSideFetch(): Promise<unknown> {
+		const products = await this.loadProducts();
+		return products;
 	}
 
 	@action

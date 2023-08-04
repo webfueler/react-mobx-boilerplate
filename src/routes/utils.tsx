@@ -1,5 +1,8 @@
 import React from "react";
-import { Route, RouteObject, Routes } from "react-router-dom";
+import { Route, Routes, matchRoutes } from "react-router-dom";
+import { AppRouteObject } from "./interfaces";
+import { routes } from "./routes";
+import { identifiers } from "../container/constants";
 
 /**
  * Recursive function to build the Routes tree
@@ -7,7 +10,7 @@ import { Route, RouteObject, Routes } from "react-router-dom";
  * @returns Route Element
  */
 const getChildRoutes = (
-	route: RouteObject,
+	route: AppRouteObject,
 ): React.ReactElement | React.ReactElement[] => {
 	if (!route.children || route.children.length === 0) {
 		return (
@@ -23,7 +26,7 @@ const getChildRoutes = (
 	));
 };
 
-const buildRoutes = (routes: RouteObject[]): React.ReactNode => (
+const buildRoutes = (routes: AppRouteObject[]): React.ReactNode => (
 	<Routes>{routes.map((route) => getChildRoutes(route))}</Routes>
 );
 

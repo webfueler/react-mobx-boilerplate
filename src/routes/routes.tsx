@@ -4,9 +4,10 @@ import { Default as DefaultLayout } from "../layouts/Default";
 import { UserListPage } from "../pages/UserListPage";
 import { Homepage } from "../pages/Homepage";
 import { CartPage } from "../pages/CartPage";
-import type { RouteObject } from "react-router-dom";
+import type { AppRouteObject } from "./interfaces";
+import { identifiers } from "../container/constants";
 
-const routes: RouteObject[] = [
+const routes: AppRouteObject[] = [
 	{
 		path: "/",
 		element: <DefaultLayout />,
@@ -14,6 +15,7 @@ const routes: RouteObject[] = [
 			{
 				index: true,
 				element: <Homepage />,
+				fetchData: [identifiers.IProductStore],
 			},
 			{
 				path: "/cart",
@@ -22,10 +24,12 @@ const routes: RouteObject[] = [
 			{
 				path: "/users",
 				element: <UserListPage />,
+				fetchData: [identifiers.IUserStore],
 				children: [
 					{
 						path: ":page",
 						element: <UserListPage />,
+						fetchData: [identifiers.IUserStore],
 					},
 				],
 			},
@@ -36,6 +40,7 @@ const routes: RouteObject[] = [
 					{
 						path: ":id",
 						element: <UserDetailPage />,
+						fetchData: [identifiers.IUserStore],
 					},
 				],
 			},

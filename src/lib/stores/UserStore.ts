@@ -6,6 +6,8 @@ import type {
 } from "../services/UserService/interfaces";
 import { inject, injectable } from "inversify";
 import { identifiers } from "../../container/constants";
+import { RouteMatch } from "react-router-dom";
+import { ServerSideFetcher } from "../../routes/interfaces";
 
 interface IUserStore {
 	user: IUser | null;
@@ -17,7 +19,7 @@ interface IUserStore {
 }
 
 @injectable()
-class UserStore implements IUserStore {
+class UserStore implements IUserStore, ServerSideFetcher {
 	@observable user: IUser | null = null;
 	@observable users: IUser[] = [];
 	@observable page = 1;
@@ -28,6 +30,22 @@ class UserStore implements IUserStore {
 		private readonly userService: IUserService,
 	) {
 		makeObservable(this);
+	}
+
+	public async serverSideFetch(routeMatch: RouteMatch): Promise<unknown> {
+		const {
+			params: { page, email },
+		} = routeMatch;
+
+		const computedPage = page ? Number.parseInt(page) : 1;
+
+		if (email) {
+			return await this.loadUser({ page: computedPage, email });
+		}
+
+		return await this.loadUsers({
+			page: computedPage,
+		});
 	}
 
 	@action

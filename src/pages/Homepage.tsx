@@ -15,9 +15,11 @@ const HomepageComponent = ({ productStore }: Props): React.ReactElement => {
 
 	// can't use destructuring to call loadProducts
 	// probably mobx limitation / needs investigation
+	/*
 	useEffect(() => {
 		productStore.loadProducts();
 	}, [productStore]);
+	*/
 
 	return (
 		<div className="product-page">

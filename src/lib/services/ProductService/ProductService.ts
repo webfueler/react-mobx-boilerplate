@@ -1,6 +1,8 @@
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import { ErrorHandling } from "../../utilities/ErrorHandling";
 import type { Product } from "./interfaces";
+import { identifiers } from "../../../container/constants";
+import type { IHttpService } from "../HttpService";
 
 interface IProductService {
 	fetchAll: (options?: {
@@ -12,17 +14,21 @@ interface IProductService {
 
 @injectable()
 class ProductService implements IProductService {
+	constructor(
+		@inject(identifiers.IHttpService)
+		private readonly httpService: IHttpService,
+	) {}
+
 	fetchAll({ limit = 20, sort = "desc" } = {}): Promise<Product[]> {
 		console.time("API response time");
-
-		const data = fetch(
-			`https://fakestoreapi.com/products/?limit=${limit}&sort=${sort}`,
-		)
+		const data = this.httpService
+			.get<Product[]>(
+				`https://fakestoreapi.com/products/?limit=${limit}&sort=${sort}`,
+			)
 			.then((response) => {
 				console.timeEnd("API response time");
-				return response.json();
+				return response;
 			})
-			.then((products: Product[]) => products)
 			.catch((error) => {
 				throw ErrorHandling.parseError(error);
 			});

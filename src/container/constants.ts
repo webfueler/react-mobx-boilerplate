@@ -5,6 +5,7 @@ const identifiers = {
 	...servicesIdentifiers,
 	...storesIdentifiers,
 	IStartupOptions: Symbol.for("IStartupOptions"),
+	IInitialState: Symbol.for("IInitialState"),
 };
 
 export { identifiers };
