@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { IUserStore } from "../../lib/stores/UserStore";
-import { withModule } from "../../container/WithModule";
+import { withModule } from "../../../../common/src/container/WithModule";
 import { UserList } from "../../components/UserList";
 import { Pagination } from "../../components/Pagination";
 import { identifiers } from "../../container/constants";

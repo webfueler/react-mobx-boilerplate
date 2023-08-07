@@ -3,7 +3,7 @@ import type { IProductService, Product } from "../services/ProductService";
 import { ErrorHandling } from "../utilities/ErrorHandling";
 import { inject, injectable } from "inversify";
 import { identifiers } from "../../container/constants";
-import { ServerSideFetcher } from "../../routes/interfaces";
+import { ServerSideFetcher } from "../../../../common/src/router/interfaces";
 
 interface IProductStore {
 	products: Product[] | null;

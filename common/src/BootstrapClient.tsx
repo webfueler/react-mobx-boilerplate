@@ -1,13 +1,14 @@
 import React from "react";
-import { interfaces } from "inversify";
+import { Container, interfaces } from "inversify";
 import { IInitialState, IStartupOptions, isInitialState } from "./interfaces";
 import { identifiers } from "./container/constants";
 import { hydrateRoot } from "react-dom/client";
 import { HYDRATION_SELECTOR } from "./constants";
 import { matchRoutes } from "react-router-dom";
 import { routes } from "../../client/src/routes/routes";
-import { isServerSideFetcher } from "../../client/src/routes/interfaces";
+import { isServerSideFetcher } from "./router/interfaces";
 import { commonContainerModule } from "./container";
+import { ClientRoot } from "./components/ClientRoot";
 
 const renderApp = (
 	container: interfaces.Container,
@@ -24,14 +25,21 @@ const renderApp = (
 		);
 	}
 
-	hydrateRoot(rootElement, app);
+	hydrateRoot(rootElement, <ClientRoot container={container} app={app} />);
+};
+
+type BootstrapClientOptions = {
+	module: interfaces.ContainerModule;
+	app: React.ReactNode;
 };
 
 export async function bootstrapClient(
-	container: interfaces.Container,
-	app: React.ReactNode,
+	options: BootstrapClientOptions,
 ): Promise<void> {
-	container.load(commonContainerModule);
+	const { app, module } = options;
+
+	const container = new Container({ defaultScope: "Singleton" });
+	container.load(module, commonContainerModule);
 
 	const startupOptions: IStartupOptions = {
 		basename: "/",

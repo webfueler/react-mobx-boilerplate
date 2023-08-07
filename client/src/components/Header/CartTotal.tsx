@@ -1,6 +1,6 @@
 import React from "react";
 import type { ICartStore } from "../../lib/stores/CartStore";
-import { withModule } from "../../container/WithModule";
+import { withModule } from "../../../../common/src/container/WithModule";
 import { identifiers } from "../../container/constants";
 
 type Modules = {

@@ -1,5 +1,5 @@
 import React from "react";
-import { withModule } from "../container/WithModule";
+import { withModule } from "../../../common/src/container/WithModule";
 import { ProductList } from "../components/ProductList";
 import { ICartStore } from "../lib/stores/CartStore";
 import { identifiers } from "../container/constants";

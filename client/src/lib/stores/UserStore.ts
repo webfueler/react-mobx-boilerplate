@@ -7,7 +7,7 @@ import type {
 import { inject, injectable } from "inversify";
 import { identifiers } from "../../container/constants";
 import { RouteMatch } from "react-router-dom";
-import { ServerSideFetcher } from "../../routes/interfaces";
+import { ServerSideFetcher } from "../../../../common/src/router/interfaces";
 import { UserRoutes } from "../utilities/UserRoutes";
 
 interface IUserStore {

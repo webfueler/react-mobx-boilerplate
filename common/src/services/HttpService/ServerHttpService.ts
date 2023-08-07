@@ -20,7 +20,6 @@ class ServerHttpService implements IHttpService {
 			},
 		};
 		this.httpClient = axios.create(this.requestConfig);
-		this.cacheService.setTTL(5);
 	}
 
 	private handleError(error: unknown): void {

@@ -2,10 +2,10 @@ import React, { useContext, ComponentType, useEffect } from "react";
 import { ContainerProviderContext } from "./ContainerProvider";
 import { matchRoutes, useLocation } from "react-router-dom";
 import { useInjection } from "./UseInjection";
-import { IStartupOptions } from "../../../common/src/interfaces";
-import { identifiers } from "../../../common/src/container/constants";
-import { routes } from "../routes/routes";
-import { isServerSideFetcher } from "../routes/interfaces";
+import { IStartupOptions } from "../interfaces";
+import { identifiers } from "./constants";
+import { routes } from "../../../client/src/routes/routes";
+import { isServerSideFetcher } from "../router/interfaces";
 
 const withFetcher = (): (<P extends React.JSX.IntrinsicAttributes>(
 	Component: ComponentType<P>,

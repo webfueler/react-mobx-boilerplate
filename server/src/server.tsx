@@ -1,3 +1,4 @@
+import "reflect-metadata";
 // Server
 import express from "express";
 import path from "node:path";
@@ -8,8 +9,8 @@ import serverConfig from "../webpack.config";
 
 // Application
 import React from "react";
-import { App } from "./entry-server";
-import { container } from "../../client/src/container";
+import { appModule } from "../../client/src/container";
+import { App } from "../../client/src/App";
 import { bootstrapServer } from "../../common/src/BootstrapServer";
 
 const isDevelopment = process.env.NODE_ENV === "development";
@@ -25,13 +26,14 @@ if (isDevelopment) {
 	app.use(express.static(path.resolve(path.join(__dirname, "..", "client"))));
 }
 
-const { renderer } = bootstrapServer(container, isDevelopment);
+const { renderer } = bootstrapServer({
+	app: <App />,
+	isDevelopment,
+	module: appModule,
+});
 
 app.get("*", async (req, res) => {
-	const response = await renderer(
-		<App container={container} requestUrl={req.url} />,
-		req.url,
-	);
+	const response = await renderer(req.url);
 
 	res.send(response);
 });

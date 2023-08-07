@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { UserRoutes } from "../lib/utilities/UserRoutes";
 import { IUserStore } from "../lib/stores/UserStore";
-import { withModule } from "../container/WithModule";
+import { withModule } from "../../../common/src/container/WithModule";
 import { identifiers } from "../container/constants";
 
 type Modules = {

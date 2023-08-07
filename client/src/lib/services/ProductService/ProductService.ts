@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { ErrorHandling } from "../../utilities/ErrorHandling";
 import type { Product } from "./interfaces";
-import { identifiers } from "../../../container/constants";
+import { identifiers } from "../../../../../common/src/container/constants";
 import type { IHttpService } from "../../../../../common/src/services";
 
 interface IProductService {

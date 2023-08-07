@@ -29,7 +29,10 @@ export class TTLCache<T> implements ITTLCache<T> {
 			return undefined;
 		}
 
-		if (date.getTime() - value.time > this.seconds * NUMBERS.milliseconds) {
+		if (
+			this.seconds !== 0 &&
+			date.getTime() - value.time > this.seconds * NUMBERS.milliseconds
+		) {
 			this.values.delete(key);
 			return undefined;
 		}
@@ -52,9 +55,10 @@ export class TTLCache<T> implements ITTLCache<T> {
 
 	public getAll(): Record<string, T> {
 		const result: Record<string, T> = {};
+		console.log(this.values.keys());
 
-		for (const [key, cache] of this.values.entries()) {
-			Object.assign(result, { [key]: cache.data });
+		for (const [key] of this.values.entries()) {
+			Object.assign(result, { [key]: this.get(key) });
 		}
 
 		return result;

@@ -1,37 +1,77 @@
 import React from "react";
-import { interfaces } from "inversify";
+import { Container, interfaces } from "inversify";
 import ReactDomServer from "react-dom/server";
 import { matchRoutes } from "react-router-dom";
+import { StaticRouter } from "react-router-dom/server";
 import { routes } from "../../client/src/routes/routes";
-import { isServerSideFetcher } from "../../client/src/routes/interfaces";
+import { isServerSideFetcher } from "./router/interfaces";
 import type { IStartupOptions } from "./interfaces";
-import type { ITTLCache } from "./services";
-import { identifiers as containerIdentifiers } from "./container/constants";
+import { TTLCache, type ITTLCache, ServerHttpService } from "./services";
+import {
+	identifiers as containerIdentifiers,
+	identifiers,
+} from "./container/constants";
 import serializeJavascript from "serialize-javascript";
 import { commonContainerModule } from "./container";
 import { HYDRATION_SELECTOR } from "./constants";
+import { ContainerProvider } from "./container/ContainerProvider";
+import { enableStaticRendering } from "mobx-react";
 
-type Renderer = (
-	app: React.ReactElement,
-	requestUrl: string,
-) => Promise<string>;
+enableStaticRendering(true);
 
-export function bootstrapServer(
-	container: interfaces.Container,
-	isDevelopment: boolean,
-): { renderer: Renderer } {
-	container.load(commonContainerModule);
+type Renderer = (requestUrl: string) => Promise<string>;
+
+type ServerRootProps = {
+	app: React.ReactNode;
+	container: interfaces.Container;
+	requestUrl: string;
+};
+
+const ServerRoot = ({
+	app,
+	container,
+	requestUrl,
+}: ServerRootProps): React.ReactNode => {
+	const startupOptions = container.get<IStartupOptions>(
+		containerIdentifiers.IStartupOptions,
+	);
+
+	return (
+		<ContainerProvider container={container}>
+			<StaticRouter basename={startupOptions.basename} location={requestUrl}>
+				{app}
+			</StaticRouter>
+		</ContainerProvider>
+	);
+};
+
+type BootstrapServerOptions = {
+	module: interfaces.ContainerModule;
+	app: React.ReactNode;
+	isDevelopment: boolean;
+};
+
+export function bootstrapServer(options: BootstrapServerOptions): {
+	renderer: Renderer;
+} {
+	const { app, isDevelopment, module } = options;
+
+	// create application container
+	const container = new Container({ defaultScope: "Singleton" });
+	// container.load(module, commonContainerModule);
+	container.load(module, commonContainerModule);
 
 	const startupOptions: IStartupOptions = {
 		basename: "/",
 		rootElement: "#root",
 	};
 
+	// bind startup options
 	container
 		.bind<IStartupOptions>(containerIdentifiers.IStartupOptions)
 		.toConstantValue(startupOptions);
 
-	const renderer: Renderer = async (app, requestUrl) => {
+	const renderer: Renderer = async (requestUrl) => {
 		const matches = matchRoutes(routes, requestUrl, startupOptions.basename);
 		const activeRoute = matches ? matches.pop() : null;
 
@@ -66,7 +106,9 @@ export function bootstrapServer(
 			);
 		}
 
-		const markup = ReactDomServer.renderToString(app);
+		const markup = ReactDomServer.renderToString(
+			<ServerRoot container={container} requestUrl={requestUrl} app={app} />,
+		);
 
 		const headTags = isDevelopment
 			? `

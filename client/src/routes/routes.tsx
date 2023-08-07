@@ -4,7 +4,7 @@ import { Default as DefaultLayout } from "../layouts/Default";
 import { UserListPage } from "../pages/UserListPage";
 import { Homepage } from "../pages/Homepage";
 import { CartPage } from "../pages/CartPage";
-import type { AppRouteObject } from "./interfaces";
+import type { AppRouteObject } from "../../../common/src/router/interfaces";
 import { identifiers } from "../container/constants";
 
 const routes: AppRouteObject[] = [

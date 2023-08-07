@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { IUserResponse, IUserService } from "./interfaces";
 import type { IFetchUsersResponse } from "./interfaces";
-import { identifiers } from "../../../container/constants";
+import { identifiers } from "../../../../../common/src/container/constants";
 import type { IHttpService } from "../../../../../common/src/services";
 
 @injectable()
