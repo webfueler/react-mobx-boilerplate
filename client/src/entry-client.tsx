@@ -10,4 +10,9 @@ import { App } from "./App";
 bootstrapClient({
 	app: <App />,
 	module: appModule,
+	// move to environment / other
+	startupOptions: {
+		basename: "/",
+		rootElement: "#root",
+	},
 });

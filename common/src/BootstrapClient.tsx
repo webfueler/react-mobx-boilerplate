@@ -7,7 +7,7 @@ import { HYDRATION_SELECTOR } from "./constants";
 import { matchRoutes } from "react-router-dom";
 import { routes } from "../../client/src/routes/routes";
 import { isServerSideFetcher } from "./router/interfaces";
-import { commonContainerModule } from "./container";
+import { clientModule } from "./container";
 import { ClientRoot } from "./components/ClientRoot";
 
 const renderApp = (
@@ -31,20 +31,16 @@ const renderApp = (
 type BootstrapClientOptions = {
 	module: interfaces.ContainerModule;
 	app: React.ReactNode;
+	startupOptions: IStartupOptions;
 };
 
 export async function bootstrapClient(
 	options: BootstrapClientOptions,
 ): Promise<void> {
-	const { app, module } = options;
+	const { app, module, startupOptions } = options;
 
 	const container = new Container({ defaultScope: "Singleton" });
-	container.load(module, commonContainerModule);
-
-	const startupOptions: IStartupOptions = {
-		basename: "/",
-		rootElement: "#root",
-	};
+	container.load(module, clientModule);
 
 	container
 		.bind<IStartupOptions>(identifiers.IStartupOptions)

@@ -30,6 +30,11 @@ const { renderer } = bootstrapServer({
 	app: <App />,
 	isDevelopment,
 	module: appModule,
+	// move to environment / other
+	startupOptions: {
+		basename: "/",
+		rootElement: "#root",
+	},
 });
 
 app.get("*", async (req, res) => {

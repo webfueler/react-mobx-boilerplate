@@ -7,11 +7,17 @@ import {
 import { identifiers } from "./constants";
 import { type ITTLCache, TTLCache } from "../services";
 
-const commonContainerModule = new ContainerModule((bind) => {
-	bind<IHttpService>(identifiers.IHttpService).to(
-		__isBrowser__ ? ClientHttpService : ServerHttpService,
-	);
-	bind<ITTLCache<Record<string, unknown>>>(identifiers.ITTLCache).to(TTLCache);
+const clientModule = new ContainerModule((bind) => {
+	bind<IHttpService>(identifiers.IHttpService).to(ClientHttpService);
 });
 
-export { commonContainerModule };
+const serverModule = new ContainerModule((bind) => {
+	bind<IHttpService>(identifiers.IHttpService)
+		.to(ServerHttpService)
+		.inSingletonScope();
+	bind<ITTLCache<Record<string, unknown>>>(identifiers.ITTLCache)
+		.to(TTLCache)
+		.inSingletonScope();
+});
+
+export { serverModule, clientModule };

@@ -6,13 +6,10 @@ import { StaticRouter } from "react-router-dom/server";
 import { routes } from "../../client/src/routes/routes";
 import { isServerSideFetcher } from "./router/interfaces";
 import type { IStartupOptions } from "./interfaces";
-import { TTLCache, type ITTLCache, ServerHttpService } from "./services";
-import {
-	identifiers as containerIdentifiers,
-	identifiers,
-} from "./container/constants";
+import { type ITTLCache } from "./services";
+import { identifiers as containerIdentifiers } from "./container/constants";
 import serializeJavascript from "serialize-javascript";
-import { commonContainerModule } from "./container";
+import { serverModule } from "./container";
 import { HYDRATION_SELECTOR } from "./constants";
 import { ContainerProvider } from "./container/ContainerProvider";
 import { enableStaticRendering } from "mobx-react";
@@ -49,22 +46,16 @@ type BootstrapServerOptions = {
 	module: interfaces.ContainerModule;
 	app: React.ReactNode;
 	isDevelopment: boolean;
+	startupOptions: IStartupOptions;
 };
 
 export function bootstrapServer(options: BootstrapServerOptions): {
 	renderer: Renderer;
 } {
-	const { app, isDevelopment, module } = options;
+	const { app, isDevelopment, module, startupOptions } = options;
 
 	// create application container
 	const container = new Container({ defaultScope: "Singleton" });
-	// container.load(module, commonContainerModule);
-	container.load(module, commonContainerModule);
-
-	const startupOptions: IStartupOptions = {
-		basename: "/",
-		rootElement: "#root",
-	};
 
 	// bind startup options
 	container
@@ -76,6 +67,9 @@ export function bootstrapServer(options: BootstrapServerOptions): {
 		const activeRoute = matches ? matches.pop() : null;
 
 		let cacheData = "";
+
+		// load modules on each request
+		container.load(module, serverModule);
 
 		if (activeRoute && activeRoute.route.fetchData) {
 			await Promise.all(
@@ -109,6 +103,9 @@ export function bootstrapServer(options: BootstrapServerOptions): {
 		const markup = ReactDomServer.renderToString(
 			<ServerRoot container={container} requestUrl={requestUrl} app={app} />,
 		);
+
+		// unload modules on each request
+		container.unload(module, serverModule);
 
 		const headTags = isDevelopment
 			? `
