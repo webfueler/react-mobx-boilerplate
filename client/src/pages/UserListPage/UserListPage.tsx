@@ -5,6 +5,7 @@ import { withModule } from "../../../../common/src/container/WithModule";
 import { UserList } from "../../components/UserList";
 import { Pagination } from "../../components/Pagination";
 import { identifiers } from "../../container/constants";
+import { Head } from "../../../../common/src/components/Head";
 
 type Modules = {
 	userStore: IUserStore;
@@ -18,10 +19,16 @@ const UserListPageComponent = ({ userStore }: Props): React.ReactElement => {
 	const { users, loading } = userStore;
 
 	return (
-		<div className="user-list-page">
-			<UserList users={users} loading={loading} currentPage={page} />
-			<Pagination currentPage={page} />
-		</div>
+		<>
+			<Head>
+				<title>Users List - Page {page}</title>
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
+			</Head>
+			<div className="user-list-page">
+				<UserList users={users} loading={loading} currentPage={page} />
+				<Pagination currentPage={page} />
+			</div>
+		</>
 	);
 };
 

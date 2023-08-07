@@ -10,7 +10,7 @@ import { type ITTLCache } from "./services";
 import { identifiers as containerIdentifiers } from "./container/constants";
 import serializeJavascript from "serialize-javascript";
 import { serverModule } from "./container";
-import { HYDRATION_SELECTOR } from "./constants";
+import { HYDRATION_SELECTOR, HEAD_SELECTOR } from "./constants";
 import { ContainerProvider } from "./container/ContainerProvider";
 import { enableStaticRendering } from "mobx-react";
 
@@ -100,9 +100,19 @@ export function bootstrapServer(options: BootstrapServerOptions): {
 			);
 		}
 
-		const markup = ReactDomServer.renderToString(
+		let markup = ReactDomServer.renderToString(
 			<ServerRoot container={container} requestUrl={requestUrl} app={app} />,
 		);
+		let customHeadTags = "";
+
+		const matchedTag = new RegExp(
+			`<div id="${HEAD_SELECTOR}">(.*?)</div>`,
+		).exec(markup);
+
+		if (matchedTag && matchedTag[0] && matchedTag[1]) {
+			customHeadTags = matchedTag[1];
+			markup = markup.replace(matchedTag[0], "");
+		}
 
 		// unload modules on each request
 		container.unload(module, serverModule);
@@ -118,7 +128,7 @@ export function bootstrapServer(options: BootstrapServerOptions): {
 			<!doctype html>
 			<html>
 				<head>
-					<title>SSR App</title>
+					${customHeadTags}
 					${headTags}
 				</head>
 				<body>
