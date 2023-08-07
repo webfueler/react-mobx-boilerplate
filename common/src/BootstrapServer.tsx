@@ -13,10 +13,17 @@ import { serverModule } from "./container";
 import { HYDRATION_SELECTOR, HEAD_SELECTOR } from "./constants";
 import { ContainerProvider } from "./container/ContainerProvider";
 import { enableStaticRendering } from "mobx-react";
+import { HttpErrorStatusCode } from "./components/HttpError";
+import { IHttpErrorService } from "./services/HttpErrorService";
 
 enableStaticRendering(true);
 
-type Renderer = (requestUrl: string) => Promise<string>;
+type RenderResult = {
+	html: string;
+	status: HttpErrorStatusCode | 200;
+};
+
+type Renderer = (requestUrl: string) => Promise<RenderResult>;
 
 type ServerRootProps = {
 	app: React.ReactNode;
@@ -114,6 +121,10 @@ export function bootstrapServer(options: BootstrapServerOptions): {
 			markup = markup.replace(matchedTag[0], "");
 		}
 
+		const errorStatus = container.get<IHttpErrorService>(
+			containerIdentifiers.IHttpErrorService,
+		);
+
 		// unload modules on each request
 		container.unload(module, serverModule);
 
@@ -124,7 +135,9 @@ export function bootstrapServer(options: BootstrapServerOptions): {
 		`
 			: {};
 
-		return `
+		return {
+			status: errorStatus.getErrorCode() || 200,
+			html: `
 			<!doctype html>
 			<html>
 				<head>
@@ -136,7 +149,8 @@ export function bootstrapServer(options: BootstrapServerOptions): {
 					<script type="${HYDRATION_SELECTOR}">${cacheData}</script>
 				</body>
 			</html>
-		`;
+		`,
+		};
 	};
 
 	return { renderer };

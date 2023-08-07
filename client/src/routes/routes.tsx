@@ -6,6 +6,7 @@ import { Homepage } from "../pages/Homepage";
 import { CartPage } from "../pages/CartPage";
 import type { AppRouteObject } from "../../../common/src/router/interfaces";
 import { identifiers } from "../container/constants";
+import { HttpError } from "../../../common/src/components/HttpError";
 
 const routes: AppRouteObject[] = [
 	{
@@ -45,6 +46,14 @@ const routes: AppRouteObject[] = [
 				],
 			},
 		],
+	},
+	{
+		path: "*",
+		element: (
+			<HttpError status={404}>
+				<h1>Not Found</h1>
+			</HttpError>
+		),
 	},
 ];
 

@@ -86,7 +86,7 @@ export async function bootstrapClient(
 		);
 		renderApp(container, app);
 	} else {
-		console.error("Initial State not found! Error during SSR?!?");
+		console.warn("Initial State not found! Error during SSR?!?");
 		container
 			.bind<IInitialState>(identifiers.IInitialState)
 			.toConstantValue({ data: {}, identifiers: [] });

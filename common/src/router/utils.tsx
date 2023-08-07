@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { AppRouteObject } from "./interfaces";
 
 /**
@@ -12,7 +12,12 @@ const getChildRoutes = (
 ): React.ReactElement | React.ReactElement[] => {
 	if (!route.children || route.children.length === 0) {
 		return (
-			<Route path={route.path} element={route.element} index={route.index} />
+			<Route
+				path={route.path}
+				element={route.element}
+				index={route.index}
+				key={route.path}
+			/>
 		);
 	}
 

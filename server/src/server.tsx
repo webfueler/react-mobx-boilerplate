@@ -38,9 +38,9 @@ const { renderer } = bootstrapServer({
 });
 
 app.get("*", async (req, res) => {
-	const response = await renderer(req.url);
+	const { status, html } = await renderer(req.url);
 
-	res.send(response);
+	res.status(status).send(html);
 });
 
 app.listen(port, () => {
