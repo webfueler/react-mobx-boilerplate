@@ -54,12 +54,14 @@ type BootstrapServerOptions = {
 	app: React.ReactNode;
 	isDevelopment: boolean;
 	startupOptions: IStartupOptions;
+	scripts?: string[];
+	css?: string[];
 };
 
 export function bootstrapServer(options: BootstrapServerOptions): {
 	renderer: Renderer;
 } {
-	const { app, isDevelopment, module, startupOptions } = options;
+	const { app, module, startupOptions, scripts, css } = options;
 
 	// create application container
 	const container = new Container({ defaultScope: "Singleton" });
@@ -81,7 +83,6 @@ export function bootstrapServer(options: BootstrapServerOptions): {
 		if (activeRoute && activeRoute.route.fetchData) {
 			await Promise.all(
 				activeRoute.route.fetchData.map((identifier) => {
-					console.log(`Prefetch ${identifier.description}`);
 					const store = container.get(identifier);
 					if (isServerSideFetcher(store)) {
 						return store.serverSideFetch(activeRoute);
@@ -107,11 +108,13 @@ export function bootstrapServer(options: BootstrapServerOptions): {
 			);
 		}
 
+		// render html
 		let markup = ReactDomServer.renderToString(
 			<ServerRoot container={container} requestUrl={requestUrl} app={app} />,
 		);
 		let customHeadTags = "";
 
+		// extract <Head> html
 		const matchedTag = new RegExp(
 			`<div id="${HEAD_SELECTOR}">(.*?)</div>`,
 		).exec(markup);
@@ -121,6 +124,7 @@ export function bootstrapServer(options: BootstrapServerOptions): {
 			markup = markup.replace(matchedTag[0], "");
 		}
 
+		// get status during render
 		const errorStatus = container.get<IHttpErrorService>(
 			containerIdentifiers.IHttpErrorService,
 		);
@@ -128,12 +132,14 @@ export function bootstrapServer(options: BootstrapServerOptions): {
 		// unload modules on each request
 		container.unload(module, serverModule);
 
-		const headTags = isDevelopment
-			? `
-			<script defer="defer" src="/client.app.js"></script>
-			<script defer="defer" src="/client.runtime.js"></script>
-		`
-			: {};
+		const headTags = [
+			...(scripts
+				? scripts.map((url) => `<script defer="defer" src="${url}"/></script>`)
+				: []),
+			...(css
+				? css.map((url) => [`<link rel="stylesheet" href="${url}" />`])
+				: []),
+		].join("");
 
 		return {
 			status: errorStatus.getErrorCode() || 200,

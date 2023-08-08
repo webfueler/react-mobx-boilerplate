@@ -55,7 +55,6 @@ export class TTLCache<T> implements ITTLCache<T> {
 
 	public getAll(): Record<string, T> {
 		const result: Record<string, T> = {};
-		console.log(this.values.keys());
 
 		for (const [key] of this.values.entries()) {
 			Object.assign(result, { [key]: this.get(key) });

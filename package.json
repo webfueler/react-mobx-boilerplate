@@ -12,8 +12,8 @@
     "build:client": "NODE_ENV=production webpack --config=client/webpack.config.ts",
     "dev": "concurrently npm:dev:*",
     "dev:client": "NODE_ENV=development webpack --config=client/webpack.config.ts --watch",
-    "dev:server": "NODE_ENV=developement webpack --config=server/webpack.config.ts --watch",
-    "dev:watch:server": "NODE_ENV=development nodemon --watch dist/server dist/server/index.js",
+    "dev:server": "NODE_ENV=development webpack --config=server/webpack.config.ts --watch",
+    "dev:server:watch": "NODE_ENV=development nodemon --watch dist/server dist/server/index.js",
     "lint": "concurrently npm:lint:*",
     "lint:js": "eslint . --report-unused-disable-directives",
     "lint:css": "stylelint \"**/*.scss\""
@@ -24,7 +24,6 @@
     "inversify": "^6.0.1",
     "mobx": "^6.10.0",
     "mobx-react": "^9.0.0",
-    "normalize.css": "^8.0.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-router-dom": "^6.14.2",
