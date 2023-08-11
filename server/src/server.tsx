@@ -2,6 +2,8 @@
 import express from "express";
 import path from "node:path";
 import fs from "node:fs";
+import helmet from "helmet";
+import morgan from "morgan";
 import webpackDevMiddleWare from "webpack-dev-middleware";
 // import webpackHotMiddleware from "webpack-hot-middleware";
 import { webpack } from "webpack";
@@ -60,6 +62,20 @@ const server = ({
 		// app.use(webpackHotMiddleware(compiler));
 	}
 
+	app.use(
+		helmet({
+			/*
+			Enable once we setup proxies for http requests
+			{
+				directives: {
+					"script-src": ["'self'", "'unsafe-eval'"],
+				},
+			},
+			*/
+			contentSecurityPolicy: false,
+		}),
+	);
+	app.use(morgan("combined"));
 	app.use(express.static(path.resolve(path.join(__dirname, "..", "client"))));
 
 	app.get("*", async (req, res) => {
