@@ -1,5 +1,4 @@
 import "./index.scss";
-
 import "reflect-metadata";
 
 import React from "react";
@@ -10,9 +9,4 @@ import { App } from "./App";
 bootstrapClient({
 	app: <App />,
 	module: appModule,
-	// move to environment / other
-	startupOptions: {
-		basename: "/",
-		rootElement: "#root",
-	},
 });

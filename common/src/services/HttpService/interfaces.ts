@@ -3,7 +3,7 @@ import type { AxiosRequestConfig } from "axios";
 export type TRequestConfig = AxiosRequestConfig;
 
 export interface IHttpService {
-	post: <TRequest, TResponse>(
+	post: <TRequest, TResponse = unknown>(
 		url: string,
 		object: TRequest,
 		config?: TRequestConfig,

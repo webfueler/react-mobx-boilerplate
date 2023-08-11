@@ -2,71 +2,41 @@ import React from "react";
 import { Container, interfaces } from "inversify";
 import ReactDomServer from "react-dom/server";
 import { matchRoutes } from "react-router-dom";
-import { StaticRouter } from "react-router-dom/server";
 import { routes } from "../../client/src/routes/routes";
 import { isServerSideFetcher } from "./router/interfaces";
 import type { IStartupOptions } from "./interfaces";
-import { TTLCache, type ITTLCache } from "./services";
-import {
-	identifiers as containerIdentifiers,
-	identifiers,
-} from "./container/constants";
+import type { ITTLCache } from "./services";
+import { identifiers as containerIdentifiers } from "./container/constants";
 import serializeJavascript from "serialize-javascript";
 import { serverModule } from "./container";
 import { HYDRATION_SELECTOR, HEAD_SELECTOR } from "./constants";
-import { ContainerProvider } from "./container/ContainerProvider";
-import { enableStaticRendering } from "mobx-react";
 import { HttpErrorStatusCode } from "./components/HttpError";
 import { IHttpErrorService } from "./services/HttpErrorService";
-
-enableStaticRendering(true);
+import { ServerRoot } from "./components/ServerRoot";
 
 type RenderResult = {
 	html: string;
 	status: HttpErrorStatusCode | 200;
 };
 
-type Renderer = (requestUrl: string) => Promise<RenderResult>;
-
-type ServerRootProps = {
-	app: React.ReactNode;
-	container: interfaces.Container;
+export type Renderer = (options: {
 	requestUrl: string;
-};
-
-const ServerRoot = ({
-	app,
-	container,
-	requestUrl,
-}: ServerRootProps): React.ReactNode => {
-	const startupOptions = container.get<IStartupOptions>(
-		containerIdentifiers.IStartupOptions,
-	);
-
-	return (
-		<ContainerProvider container={container}>
-			<StaticRouter basename={startupOptions.basename} location={requestUrl}>
-				{app}
-			</StaticRouter>
-		</ContainerProvider>
-	);
-};
+	scripts: string[];
+	css: string[];
+}) => Promise<RenderResult>;
 
 type BootstrapServerOptions = {
 	module: interfaces.ContainerModule;
 	app: React.ReactNode;
-	isDevelopment: boolean;
 	startupOptions: IStartupOptions;
-	scripts?: string[];
-	css?: string[];
 };
 
 export function bootstrapServer(options: BootstrapServerOptions): {
 	renderer: Renderer;
 } {
-	const { app, module, startupOptions, scripts, css } = options;
+	const { app, module, startupOptions } = options;
 
-	const renderer: Renderer = async (requestUrl) => {
+	const renderer: Renderer = async ({ requestUrl, css, scripts }) => {
 		// create application container
 		const container = new Container({ defaultScope: "Singleton" });
 
@@ -81,7 +51,9 @@ export function bootstrapServer(options: BootstrapServerOptions): {
 		const matches = matchRoutes(routes, requestUrl, startupOptions.basename);
 		const activeRoute = matches ? matches.pop() : null;
 
-		let cacheData = "";
+		const cacheData = {
+			startupOptions,
+		};
 
 		if (activeRoute && activeRoute.route.fetchData) {
 			await Promise.all(
@@ -102,13 +74,10 @@ export function bootstrapServer(options: BootstrapServerOptions): {
 				.map((identifier) => identifier.description || "")
 				.filter((value) => value !== "");
 
-			cacheData = serializeJavascript(
-				{
-					identifiers,
-					data: cacheService.getAll(),
-				},
-				{ isJSON: true },
-			);
+			Object.assign(cacheData, {
+				identifiers,
+				data: cacheService.getAll(),
+			});
 		}
 
 		// render html
@@ -133,12 +102,8 @@ export function bootstrapServer(options: BootstrapServerOptions): {
 		);
 
 		const headTags = [
-			...(scripts
-				? scripts.map((url) => `<script defer="defer" src="${url}"/></script>`)
-				: []),
-			...(css
-				? css.map((url) => [`<link rel="stylesheet" href="${url}" />`])
-				: []),
+			...scripts.map((url) => `<script defer="defer" src="${url}"/></script>`),
+			...css.map((url) => [`<link rel="stylesheet" href="${url}" />`]),
 		].join("");
 
 		// load modules
@@ -155,7 +120,9 @@ export function bootstrapServer(options: BootstrapServerOptions): {
 				</head>
 				<body>
 					<div id="root">${markup}</div>
-					<script type="${HYDRATION_SELECTOR}">${cacheData}</script>
+					<script type="${HYDRATION_SELECTOR}">${serializeJavascript(cacheData, {
+						isJSON: true,
+					})}</script>
 				</body>
 			</html>
 		`,

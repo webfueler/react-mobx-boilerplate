@@ -115,7 +115,7 @@ const clientConfig: Configuration = {
 
 const serverConfig: Configuration = {
 	mode: "production",
-	entry: path.resolve(process.cwd(), "server/src/server.tsx"),
+	entry: path.resolve(process.cwd(), "server/src/entry-server.tsx"),
 	target: "node",
 	externals: [nodeExternals()],
 	output: {
