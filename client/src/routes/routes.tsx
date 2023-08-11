@@ -1,7 +1,7 @@
 import React from "react";
-import type { AppRouteObject } from "../../../common/src/router/interfaces";
+import type { AppRouteObject } from "../../../lib/src/router/interfaces";
 import { identifiers } from "../container/constants";
-import { HttpError } from "../../../common/src/components/HttpError";
+import { HttpError } from "../../../lib/src/components/HttpError";
 import { ProductPage } from "../products";
 import { DefaultLayout } from "../shared/layouts/DefaultLayout";
 import { CartPage } from "../cart";

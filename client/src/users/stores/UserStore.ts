@@ -4,7 +4,7 @@ import { UserRoutes } from "../services";
 import { inject, injectable } from "inversify";
 import { identifiers } from "../../container/constants";
 import { RouteMatch } from "react-router-dom";
-import { ServerSideFetcher } from "../../../../common/src/router/interfaces";
+import { ServerSideFetcher } from "../../../../lib/src/router/interfaces";
 
 interface IUserStore {
 	user: IUser | null;

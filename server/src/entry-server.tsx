@@ -1,7 +1,7 @@
 import "reflect-metadata";
 
 import React from "react";
-import { bootstrapServer } from "../../common/src/BootstrapServer";
+import { bootstrapServer } from "../../lib/src/BootstrapServer";
 import { App } from "../../client/src/App";
 import { appModule } from "../../client/src/container";
 import { config } from "dotenv";

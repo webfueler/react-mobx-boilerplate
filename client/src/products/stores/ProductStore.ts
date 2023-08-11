@@ -2,7 +2,7 @@ import { action, makeObservable, observable } from "mobx";
 import type { IProductService, Product } from "../services/ProductService";
 import { inject, injectable } from "inversify";
 import { identifiers } from "../../container/constants";
-import { ServerSideFetcher } from "../../../../common/src/router/interfaces";
+import { ServerSideFetcher } from "../../../../lib/src/router/interfaces";
 import { ErrorHandling } from "../../shared/utilities/ErrorHandling";
 
 interface IProductStore {

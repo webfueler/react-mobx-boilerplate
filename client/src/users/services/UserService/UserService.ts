@@ -1,8 +1,8 @@
 import { inject, injectable } from "inversify";
 import { IUserResponse, IUserService } from "./interfaces";
 import type { IFetchUsersResponse } from "./interfaces";
-import { identifiers } from "../../../../../common/src/container/constants";
-import type { IHttpService } from "../../../../../common/src/services";
+import { identifiers } from "../../../../../lib/src/container/constants";
+import type { IHttpService } from "../../../../../lib/src/services";
 
 @injectable()
 class UserService implements IUserService {

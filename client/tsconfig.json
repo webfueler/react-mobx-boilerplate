@@ -4,5 +4,5 @@
     "target": "es6",
     "lib": ["dom", "es6", "ES2015"],
   },
-  "include": [".eslintrc.js", "webpack.config.ts", "index.d.ts", "../index.d.ts", "src", "../common/src/container/UseInjection.ts", "../common/src/container/WithModule.tsx", "../common/src/container/WithFetcher.tsx"],
+  "include": [".eslintrc.js", "webpack.config.ts", "index.d.ts", "../index.d.ts", "src", "../lib/src/container/UseInjection.ts", "../lib/src/container/WithModule.tsx", "../lib/src/container/WithFetcher.tsx"],
 }

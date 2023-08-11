@@ -1,9 +1,9 @@
 import React from "react";
 import type { IProductStore } from "../stores/ProductStore";
 import { ProductList } from "../components/ProductList";
-import { withModule } from "../../../../common/src/container/WithModule";
+import { withModule } from "../../../../lib/src/container/WithModule";
 import { identifiers } from "../../container/constants";
-import { Head } from "../../../../common/src/components/Head";
+import { Head } from "../../../../lib/src/components/Head";
 
 type Modules = {
 	productStore: IProductStore;

@@ -1,5 +1,5 @@
 import React from "react";
-import { buildRoutes } from "../../common/src/router/utils";
+import { buildRoutes } from "../../lib/src/router/utils";
 import { routes } from "./routes/routes";
 
 export const App = (): React.ReactElement => {

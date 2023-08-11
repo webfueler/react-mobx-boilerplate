@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import { UserList } from "../../components/UserList";
 import { Pagination } from "../../components/Pagination";
 import type { IUserStore } from "../../stores";
-import { Head } from "../../../../../common/src/components/Head";
-import { withModule } from "../../../../../common/src/container/WithModule";
+import { Head } from "../../../../../lib/src/components/Head";
+import { withModule } from "../../../../../lib/src/container/WithModule";
 import { identifiers } from "../../../container";
 
 type Modules = {

@@ -1,1 +1,1 @@
-export { serverConfig as default } from "../common/webpack.config";
+export { serverConfig as default } from "../lib/webpack.config";
