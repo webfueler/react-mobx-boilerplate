@@ -73,9 +73,13 @@ const server = ({
 	});
 
 	const serve = (): void => {
-		app.listen(port, () => {
-			console.log(`Listening on port ${port}`);
-		});
+		app
+			.listen(port, () => {
+				console.log(`Listening on port ${port}`);
+			})
+			.on("error", (error) => {
+				throw error;
+			});
 	};
 
 	return { serve };
