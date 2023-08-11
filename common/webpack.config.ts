@@ -2,10 +2,13 @@ import "webpack-dev-server"; // required for typings
 import path from "node:path";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
-import WebpackAssetsManifest from "webpack-assets-manifest";
+import { WebpackManifestPlugin } from "webpack-manifest-plugin";
 import type { Configuration } from "webpack";
 import nodeExternals from "webpack-node-externals";
 import { DefinePlugin, HotModuleReplacementPlugin } from "webpack";
+import { config } from "dotenv";
+
+config();
 
 const isProduction = process.env.NODE_ENV !== "development";
 const distFolder = "dist";
@@ -20,6 +23,7 @@ const clientConfig: Configuration = {
 	output: {
 		filename: isProduction ? "[name].[fullhash].js" : "client.[id].js",
 		path: path.resolve(process.cwd(), `${distFolder}/client`),
+		publicPath: process.env.PUBLIC_PATH || "/",
 		clean: true,
 	},
 	watchOptions: {
@@ -87,7 +91,7 @@ const clientConfig: Configuration = {
 		new DefinePlugin({
 			__isBrowser__: "true",
 		}),
-		new WebpackAssetsManifest(),
+		new WebpackManifestPlugin({}),
 	],
 	optimization: {
 		minimize: isProduction,
@@ -117,6 +121,7 @@ const serverConfig: Configuration = {
 	output: {
 		path: path.resolve(process.cwd(), `${distFolder}/server`),
 		filename: "index.js",
+		publicPath: process.env.PUBLIC_PATH || "/",
 		clean: true,
 	},
 	module: {

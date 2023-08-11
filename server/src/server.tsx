@@ -33,9 +33,7 @@ let manifest: Record<string, string> = {};
 
 try {
 	const fileContents = fs
-		.readFileSync(
-			path.resolve(path.join(__dirname, "../client/assets-manifest.json")),
-		)
+		.readFileSync(path.resolve(path.join(__dirname, "../client/manifest.json")))
 		.toString();
 	manifest = JSON.parse(fileContents);
 } catch (error) {

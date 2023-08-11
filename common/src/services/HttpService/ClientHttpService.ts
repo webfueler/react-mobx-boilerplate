@@ -8,6 +8,7 @@ import { type IInitialState } from "../../interfaces/InitialState";
 class ClientHttpService implements IHttpService {
 	private httpClient: AxiosInstance;
 	private requestConfig: TRequestConfig;
+	private useSSRCache = true;
 
 	constructor(
 		@inject(identifiers.IInitialState)
@@ -35,7 +36,8 @@ class ClientHttpService implements IHttpService {
 				? Object.assign(this.requestConfig, config)
 				: undefined;
 
-			if (this.initialState.data[url]) {
+			if (this.initialState.data[url] && this.useSSRCache) {
+				this.useSSRCache = false;
 				return this.initialState.data[url];
 			}
 

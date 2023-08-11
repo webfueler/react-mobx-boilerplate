@@ -1,12 +1,11 @@
 import React from "react";
-import { UserDetailPage } from "../pages/UserDetailPage";
-import { Default as DefaultLayout } from "../layouts/Default";
-import { UserListPage } from "../pages/UserListPage";
-import { Homepage } from "../pages/Homepage";
-import { CartPage } from "../pages/CartPage";
 import type { AppRouteObject } from "../../../common/src/router/interfaces";
 import { identifiers } from "../container/constants";
 import { HttpError } from "../../../common/src/components/HttpError";
+import { ProductPage } from "../products";
+import { DefaultLayout } from "../shared/layouts/DefaultLayout";
+import { CartPage } from "../cart";
+import { UserDetailPage, UserListPage } from "../users";
 
 const routes: AppRouteObject[] = [
 	{
@@ -15,7 +14,7 @@ const routes: AppRouteObject[] = [
 		children: [
 			{
 				index: true,
-				element: <Homepage />,
+				element: <ProductPage />,
 				fetchData: [identifiers.IProductStore],
 			},
 			{

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { interfaces } from "inversify";
 import {
 	ContainerProvider,
@@ -26,6 +26,7 @@ const ServerSideFetcher = ({
 	);
 	const { container } = useContext(ContainerProviderContext);
 	const location = useLocation();
+	const firstLoad = useRef(true);
 
 	useEffect(() => {
 		const matches = matchRoutes(
@@ -34,15 +35,28 @@ const ServerSideFetcher = ({
 			startupOptions.basename,
 		);
 		const activeRoute = matches ? matches.pop() : null;
-		if (activeRoute && activeRoute.route.fetchData && container) {
+		if (
+			!firstLoad.current &&
+			activeRoute &&
+			activeRoute.route.fetchData &&
+			container
+		) {
 			for (const identifier of activeRoute.route.fetchData) {
 				const store = container.get(identifier);
 				if (isServerSideFetcher(store)) {
 					store.serverSideFetch(activeRoute);
 				}
 			}
+		} else {
+			firstLoad.current = false;
 		}
 	}, [location, container, startupOptions.basename]);
+
+	useEffect(() => {
+		return () => {
+			firstLoad.current = true;
+		};
+	}, []);
 
 	return app;
 };

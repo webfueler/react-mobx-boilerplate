@@ -6,8 +6,11 @@ import { StaticRouter } from "react-router-dom/server";
 import { routes } from "../../client/src/routes/routes";
 import { isServerSideFetcher } from "./router/interfaces";
 import type { IStartupOptions } from "./interfaces";
-import { type ITTLCache } from "./services";
-import { identifiers as containerIdentifiers } from "./container/constants";
+import { TTLCache, type ITTLCache } from "./services";
+import {
+	identifiers as containerIdentifiers,
+	identifiers,
+} from "./container/constants";
 import serializeJavascript from "serialize-javascript";
 import { serverModule } from "./container";
 import { HYDRATION_SELECTOR, HEAD_SELECTOR } from "./constants";
@@ -63,22 +66,22 @@ export function bootstrapServer(options: BootstrapServerOptions): {
 } {
 	const { app, module, startupOptions, scripts, css } = options;
 
-	// create application container
-	const container = new Container({ defaultScope: "Singleton" });
-
-	// bind startup options
-	container
-		.bind<IStartupOptions>(containerIdentifiers.IStartupOptions)
-		.toConstantValue(startupOptions);
-
 	const renderer: Renderer = async (requestUrl) => {
+		// create application container
+		const container = new Container({ defaultScope: "Singleton" });
+
+		// bind startup options
+		container
+			.bind<IStartupOptions>(containerIdentifiers.IStartupOptions)
+			.toConstantValue(startupOptions);
+
+		// load modules
+		container.load(module, serverModule);
+
 		const matches = matchRoutes(routes, requestUrl, startupOptions.basename);
 		const activeRoute = matches ? matches.pop() : null;
 
 		let cacheData = "";
-
-		// load modules on each request
-		container.load(module, serverModule);
 
 		if (activeRoute && activeRoute.route.fetchData) {
 			await Promise.all(
@@ -129,9 +132,6 @@ export function bootstrapServer(options: BootstrapServerOptions): {
 			containerIdentifiers.IHttpErrorService,
 		);
 
-		// unload modules on each request
-		container.unload(module, serverModule);
-
 		const headTags = [
 			...(scripts
 				? scripts.map((url) => `<script defer="defer" src="${url}"/></script>`)
@@ -140,6 +140,9 @@ export function bootstrapServer(options: BootstrapServerOptions): {
 				? css.map((url) => [`<link rel="stylesheet" href="${url}" />`])
 				: []),
 		].join("");
+
+		// load modules
+		container.unload(module, serverModule);
 
 		return {
 			status: errorStatus.getErrorCode() || 200,
