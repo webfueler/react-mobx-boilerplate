@@ -27,4 +27,5 @@ npm run build
 
 ## To Do:
 - better styling (this is mainly showcasing architecture, not UI)
-- add Server Side Rendering (SSR)
+- extract layout to file for better customization (`index.ejs`)
+- ability to set `basename` by http request headers (`x-basename`) - good for ssr micro-frontends
