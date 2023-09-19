@@ -84,6 +84,8 @@ export function bootstrapServer(options: BootstrapServerOptions): {
 		let markup = ReactDomServer.renderToString(
 			<ServerRoot container={container} requestUrl={requestUrl} app={app} />,
 		);
+
+		// these are tags sent by `<Head>` component
 		let customHeadTags = "";
 
 		// extract <Head> html

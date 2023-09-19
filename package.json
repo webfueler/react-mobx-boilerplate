@@ -5,7 +5,7 @@
   "keywords": [],
   "main": "src/index.js",
   "scripts": {
-    "start": "nodemon dist/server/index.js",
+    "start": "node dist/server/index.js",
     "build": "rimraf ./dist && concurrently npm:build:*",
     "clean": "rimraf ./dist",
     "build:server": "webpack --config=server/webpack.config.ts",
